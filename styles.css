@@ -1,29 +1,23 @@
+
 body {
-  font-family: sans-serif;
-  background: #f5f5f5;
-  padding: 2rem;
+    font-family: sans-serif;
+    margin: 20px;
+    background: #f9f9f9;
+    color: #333;
 }
-#app {
-  max-width: 700px;
-  margin: auto;
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+h1, h2 {
+    color: #006400;
 }
-.week-view {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin: 1rem 0;
+input, select, textarea {
+    display: block;
+    margin: 5px 0 15px;
+    padding: 8px;
+    width: 300px;
 }
-.session {
-  background: #e0f7fa;
-  padding: 0.5rem;
-  border-radius: 4px;
+textarea {
+    height: 80px;
 }
-.logo {
-  width: 140px;
-  display: block;
-  margin: 0 auto 1rem;
+button {
+    margin: 10px 10px 20px 0;
+    padding: 10px 20px;
 }

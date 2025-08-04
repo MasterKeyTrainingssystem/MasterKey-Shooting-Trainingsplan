@@ -2,69 +2,53 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>MasterKey Shooting Planner – V6.7</title>
-  <style>
-    canvas { border: 1px solid #ccc; margin: 20px auto; display: block; }
-    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
-    h1, h2 { color: #2a5d38; text-align: center; }
-    section { margin-bottom: 40px; }
-    .card-slot { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
-    .card { padding: 10px 15px; background: #cde7d8; border-radius: 8px; cursor: grab; }
-    #plan-area { border: 2px dashed #888; min-height: 80px; padding: 10px; background: #fff; margin-top: 10px; }
-    textarea { width: 100%; min-height: 80px; }
-    button { margin-top: 10px; padding: 10px 20px; }
-  </style>
+    <meta charset="UTF-8">
+    <title>MasterKey Shooting Planner 7.0</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>MasterKey Shooting Planner – Version 6.7</h1>
-
-  <section>
-    <h2>📝 Trainingsplanung</h2>
-    <label>Datum: <input type="date" id="session-date"></label><br>
-    <label>Startzeit: <input type="time" id="session-time"></label>
-    <label>Endzeit: <input type="time" id="session-endtime"></label><br><br>
-    <label>Trainer: <input type="text" id="trainer-name"></label>
-    <label>Ort: <input type="text" id="training-location"></label><br><br>
-    <label>Notizen:</label><br>
-    <textarea id="notes"></textarea>
-  </section>
-
-  <section>
-    <h2>🃏 Karten-Auswahl per Drag & Drop</h2>
-    <div class="card-slot" id="card-pool">
-      <div class="card" draggable="true">S01 – Äußerer Anschlag</div>
-      <div class="card" draggable="true">S02 – Atmung</div>
-      <div class="card" draggable="true">S03 – Nullpunktkontrolle</div>
-      <div class="card" draggable="true">S04 – Zielen</div>
-      <div class="card" draggable="true">S05 – Abziehen</div>
-      <div class="card" draggable="true">S06 – Nachhalten</div>
-      <div class="card" draggable="true">S07 – Analyse & Wiederholung</div>
-      <div class="card" draggable="true">TL01 – Technikblöcke planen</div>
-      <div class="card" draggable="true">TL02 – Technik unter Belastung</div>
-      <div class="card" draggable="true">TL03 – Mentale Anker</div>
-      <div class="card" draggable="true">TL04 – Analyse mit Partner</div>
-      <div class="card" draggable="true">TL05 – Match Feeling</div>
-      <div class="card" draggable="true">TL06 – Reflexion & Umsetzung</div>
+    <h1>MasterKey Shooting Planner – Version 7.0</h1>
+    <div id="login-screen">
+        <label>Dein Name:</label>
+        <input type="text" id="username" placeholder="Trainer oder Athlet">
+        <button onclick="startApp()">Login</button>
     </div>
-    <h3>🗂️ Dein Trainingsplan:</h3>
-    <div id="plan-area" ondrop="dropCard(event)" ondragover="allowDrop(event)"></div>
-  </section>
+    <div id="main-app" style="display:none;">
+        <h2>👤 Athletenprofil</h2>
+        <input type="text" id="athlete-name" placeholder="Name des Athleten">
+        <input type="text" id="discipline" placeholder="Disziplin">
+        <input type="text" id="level" placeholder="Level">
+        <input type="text" id="team" placeholder="Kader/Team">
+        <input type="text" id="trainer" placeholder="Trainername">
+        <input type="text" id="location" placeholder="Trainingsort">
 
-  <section>
-    <h2>📊 Wheel of Life: Schießablauf</h2>
-    <canvas id="shootCanvas" width="400" height="400"></canvas>
-  </section>
+        <h2>🗓️ Trainingsplanung</h2>
+        <input type="date" id="session-date">
+        <input type="time" id="session-start">
+        <input type="time" id="session-end">
 
-  <section>
-    <h2>📊 Wheel of Life: Umfeldanalyse</h2>
-    <canvas id="envCanvas" width="400" height="400"></canvas>
-  </section>
+        <h3>📋 Planungsgrundlage (TL01–TL06)</h3>
+        <select id="planning-card"></select>
 
-  <div style="text-align: center;">
-    <button onclick="downloadPDF()">📄 PDF Export</button>
-  </div>
+        <h3>🧩 Einheitenwahl (S01–S07)</h3>
+        <label>Aufwärmen:</label><select id="warmup-card"></select>
+        <label>Technik:</label><select id="tech-card"></select>
+        <label>Mental:</label><select id="mental-card"></select>
+        <label>Trocken:</label><select id="dry-card"></select>
+        <label>Auswertung:</label><select id="eval-card"></select>
 
-  <script src="planner.js"></script>
+        <textarea id="notes" placeholder="Notizen zur Einheit..."></textarea>
+        <button onclick="saveSession()">Einheit speichern</button>
+        <button onclick="exportPDF()">📄 PDF Export</button>
+
+        <h2>📊 Wheel of Life: Schießablauf</h2>
+        <canvas id="wheelCanvas" width="300" height="300" style="border:1px solid #ccc"></canvas>
+        <button onclick="drawWheel()">🌀 Analyse starten</button>
+
+        <h2>📊 Wheel of Life: Umfeldanalyse</h2>
+        <canvas id="envCanvas" width="300" height="300" style="border:1px solid #ccc"></canvas>
+        <button onclick="drawEnvironmentWheel()">🌀 Umfeld analysieren</button>
+    </div>
+    <script src="app.js"></script>
 </body>
 </html>
