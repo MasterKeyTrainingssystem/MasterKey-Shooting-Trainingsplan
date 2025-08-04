@@ -1,1 +1,27 @@
-/* Hier könnten CSS-Stile stehen */
+
+body {
+  font-family: sans-serif;
+  padding: 20px;
+  background: #f9f9f9;
+}
+header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.logo {
+  width: 60px;
+}
+input, select, textarea, button {
+  margin-bottom: 10px;
+  display: block;
+  width: 100%;
+  max-width: 400px;
+}
+textarea {
+  height: 80px;
+}
+canvas {
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
