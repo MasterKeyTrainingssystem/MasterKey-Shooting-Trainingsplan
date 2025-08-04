@@ -3,64 +3,104 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>MasterKey Shooting – Trainer</title>
+  <title>MasterKey Shooting – Trainingsplan V6.2</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <header>
-    <h1>🎯 MasterKey Shooting – Trainer</h1>
-    <input id="trainerName" type="text" placeholder="Name eingeben">
-    <button onclick="startApp()">Login</button>
-  </header>
+<img src='masterkey_logo.png' alt='MasterKey Shooting' style='height:80px;margin-bottom:10px;'>
+  <img src="logo.png" alt="MasterKey Logo" style="height: 60px;">
+  <h1>🎯 Individuelle Trainingsplanung</h1>
 
-  <main id="mainContent" style="display:none;">
-    <section id="athletes">
-      <h2>👥 Athletenverwaltung</h2>
-      <input type="text" id="athleteName" placeholder="Name des Athleten">
-      <input type="text" id="discipline" placeholder="Disziplin">
-      <input type="text" id="level" placeholder="Level">
-      <input type="text" id="team" placeholder="Kader / Team">
-      <button onclick="addAthlete()">➕ Athlet speichern</button>
-      <ul id="athleteList"></ul>
-    </section>
+  <label for="athlete">Athlet:in wählen:</label>
+  <select id="athlete">
+    <option value="Anna">Anna – Gewehr</option>
+    <option value="Ben">Ben – Pistole</option>
+  </select>
 
-    <section id="plan">
-      <h2>🗓️ Trainingsplanung</h2>
-      <input type="date" id="session-date">
-      <input type="time" id="session-start">
-      <input type="time" id="session-end">
-      <label>Planungsgrundlage</label>
-      <select id="plan-base">
-        <option>TL01</option><option>TL02</option><option>TL03</option>
-        <option>TL04</option><option>TL05</option><option>TL06</option>
-      </select>
-      <label>Aufwärmen</label>
-      <select id="warmup">
-        <option>S01</option><option>S02</option><option>S03</option>
-        <option>S04</option><option>S05</option><option>S06</option><option>S07</option>
-      </select>
-      <label>Technik</label><select id="technique"><option>S01</option><option>S02</option><option>S03</option><option>S04</option><option>S05</option><option>S06</option><option>S07</option></select>
-      <label>Mental</label><select id="mental"><option>S01</option><option>S02</option><option>S03</option><option>S04</option><option>S05</option><option>S06</option><option>S07</option></select>
-      <label>Trocken</label><select id="dry"><option>S01</option><option>S02</option><option>S03</option><option>S04</option><option>S05</option><option>S06</option><option>S07</option></select>
-      <label>Auswertung</label><select id="analysis"><option>S01</option><option>S02</option><option>S03</option><option>S04</option><option>S05</option><option>S06</option><option>S07</option></select>
-      <textarea id="notes" placeholder="📝 Notizen zur Einheit"></textarea>
-      <button onclick="generatePDF()">📄 PDF exportieren</button>
-    </section>
+  <h2>🗂️ Kartenübersicht</h2>
+  <div id="card-pool">
+    <h3>Basis-Karten #S01–#S07</h3>
+    <div class="card" draggable="true" data-id="S01">S01 – Äußerer Anschlag</div>
+    <div class="card" draggable="true" data-id="S02">S02 – Atmung</div>
+    <div class="card" draggable="true" data-id="S03">S03 – Nullpunktkontrolle</div>
+    <div class="card" draggable="true" data-id="S04">S04 – Zielen</div>
+    <div class="card" draggable="true" data-id="S05">S05 – Abziehen</div>
+    <div class="card" draggable="true" data-id="S06">S06 – Nachhalten</div>
+    <div class="card" draggable="true" data-id="S07">S07 – Analyse & Wiederholung</div>
 
-    <section>
-      <h2>📊 Wheel of Life – Schießablauf</h2>
-      <canvas id="shootingWheel" width="300" height="300" style="border:1px solid #ccc"></canvas>
-      <button onclick="drawWheel()">🌀 Analyse starten</button>
-    </section>
+    <h3>Planungsgrundlage #TL01–#TL06</h3>
+    <div class="card" draggable="true" data-id="TL01">TL01 – Technikblöcke planen</div>
+    <div class="card" draggable="true" data-id="TL02">TL02 – Technik unter Belastung</div>
+    <div class="card" draggable="true" data-id="TL03">TL03 – Mentale Anker</div>
+    <div class="card" draggable="true" data-id="TL04">TL04 – Analyse mit Partner oder Video</div>
+    <div class="card" draggable="true" data-id="TL05">TL05 – Match Feeling</div>
+    <div class="card" draggable="true" data-id="TL06">TL06 – Reflexion & Umsetzung</div>
+  </div>
 
-    <section>
-      <h2>📊 Wheel of Life – Umfeldanalyse</h2>
-      <canvas id="envWheel" width="300" height="300" style="border:1px solid #ccc"></canvas>
-      <button onclick="drawEnvWheel()">🌀 Umfeld analysieren</button>
-    </section>
-  </main>
+  <h2>📋 Trainingsplan</h2>
+  <div id="plan-dropzone" ondragover="event.preventDefault()"></div>
 
+  <div id="card-info"></div>
+  <br>
+  <button onclick="savePlan()">💾 Plan speichern</button>
+  <button onclick="exportPDF()">📄 PDF exportieren</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
+
+  <h2>🕒 Trainingszeit</h2>
+  <label>Datum: <input type="date" id="session-date"></label>
+  <label>Startzeit: <input type="time" id="session-time"></label>
+  <label>Endzeit: <input type="time" id="session-endtime"></label>
+
+  <h2>🔍 Detaillierte Struktur</h2>
+  <label>Aufwärmen:</label><select id="warmup"><option>S01 – Äußerer Anschlag</option></select>
+  <label>Technik:</label><select id="tech"><option>S02 – Atmung</option></select>
+  <label>Mental:</label><select id="mental"><option>S03 – Nullpunktkontrolle</option></select>
+  <label>Trocken:</label><select id="dry"><option>S04 – Zielen</option></select>
+  <label>Auswertung:</label><select id="eval"><option>S07 – Analyse & Wiederholung</option></select>
+
+  <h2>📊 Wheel of Life – Schießablauf</h2>
+  <canvas id="wheelCanvas" width="300" height="300" style="border:1px solid #ccc"></canvas>
+  <br><button onclick="drawWheel()">🌀 Analyse starten</button>
+
+  <h2>📊 Wheel of Life – Umfeldanalyse</h2>
+  <canvas id="envCanvas" width="300" height="300" style="border:1px solid #ccc"></canvas>
+  <br><button onclick="drawEnvironmentWheel()">🌀 Umfeld analysieren</button>
+
+
+<h2>📅 Wochenübersicht</h2>
+<div id="calendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:20px;">
+  <div><strong>Montag</strong><div id="day-Mo" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
+  <div><strong>Dienstag</strong><div id="day-Di" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
+  <div><strong>Mittwoch</strong><div id="day-Mi" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
+  <div><strong>Donnerstag</strong><div id="day-Do" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
+  <div><strong>Freitag</strong><div id="day-Fr" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
+  <div><strong>Samstag</strong><div id="day-Sa" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
+  <div><strong>Sonntag</strong><div id="day-So" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
+</div>
+
+
+<script>
+function saveToCalendar() {
+  const name = document.getElementById("athlete-name")?.value || "Athlet";
+  const date = new Date(document.getElementById("session-date").value);
+  const weekday = ['So','Mo','Di','Mi','Do','Fr','Sa'][date.getDay()];
+  const start = document.getElementById("session-time").value;
+  const end = document.getElementById("session-endtime").value;
+  const card = document.getElementById("planning-card").value;
+
+  const entry = document.createElement("div");
+  entry.style.borderBottom = "1px solid #999";
+  entry.style.paddingBottom = "4px";
+  entry.style.marginBottom = "4px";
+  entry.innerHTML = `<strong>${name}</strong><br>${start}–${end}<br>📌 ${card}`;
+
+  const container = document.getElementById("day-" + weekday);
+  if (container) container.appendChild(entry);
+}
+document.querySelector("button[onclick='saveSession()']").addEventListener("click", saveToCalendar);
+</script>
+
 </body>
 </html>
