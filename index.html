@@ -1,54 +1,39 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <title>MasterKey Shooting Planner 7.0</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>MasterKey Shooting Planner 7.3</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <h1>MasterKey Shooting Planner – Version 7.0</h1>
-    <div id="login-screen">
-        <label>Dein Name:</label>
-        <input type="text" id="username" placeholder="Trainer oder Athlet">
-        <button onclick="startApp()">Login</button>
-    </div>
-    <div id="main-app" style="display:none;">
-        <h2>👤 Athletenprofil</h2>
-        <input type="text" id="athlete-name" placeholder="Name des Athleten">
-        <input type="text" id="discipline" placeholder="Disziplin">
-        <input type="text" id="level" placeholder="Level">
-        <input type="text" id="team" placeholder="Kader/Team">
-        <input type="text" id="trainer" placeholder="Trainername">
-        <input type="text" id="location" placeholder="Trainingsort">
-
-        <h2>🗓️ Trainingsplanung</h2>
-        <input type="date" id="session-date">
-        <input type="time" id="session-start">
-        <input type="time" id="session-end">
-
-        <h3>📋 Planungsgrundlage (TL01–TL06)</h3>
-        <select id="planning-card"></select>
-
-        <h3>🧩 Einheitenwahl (S01–S07)</h3>
-        <label>Aufwärmen:</label><select id="warmup-card"></select>
-        <label>Technik:</label><select id="tech-card"></select>
-        <label>Mental:</label><select id="mental-card"></select>
-        <label>Trocken:</label><select id="dry-card"></select>
-        <label>Auswertung:</label><select id="eval-card"></select>
-
-        <textarea id="notes" placeholder="Notizen zur Einheit..."></textarea>
-        <button onclick="saveSession()">Einheit speichern</button>
-        <button onclick="exportPDF()">📄 PDF Export</button>
-
-        <h2>📊 Wheel of Life: Schießablauf</h2>
-        <canvas id="wheelCanvas" width="300" height="300" style="border:1px solid #ccc"></canvas>
-        <button onclick="drawWheel()">🌀 Analyse starten</button>
-
-        <h2>📊 Wheel of Life: Umfeldanalyse</h2>
-        <canvas id="envCanvas" width="300" height="300" style="border:1px solid #ccc"></canvas>
-        <button onclick="drawEnvironmentWheel()">🌀 Umfeld analysieren</button>
-    </div>
-    <script src="app.js"></script>
+  <h1>📋 MasterKey Shooting Planner – Version 7.3</h1>
+  <input type="text" id="athleteName" placeholder="Name der Athlet:in">
+  <input type="text" id="trainerName" placeholder="Name des Trainers">
+  <input type="text" id="trainingLocation" placeholder="Trainingsort">
+  <input type="date" id="trainingDate">
+  <input type="time" id="startTime">
+  <input type="time" id="endTime">
+  <h2>🎯 Karten auswählen</h2>
+  <select id="cardSelect">
+    <option value="">Bitte Karte wählen</option>
+    <option value="S01">S01 – Äußerer Anschlag</option>
+    <option value="S02">S02 – Atmung</option>
+    <option value="S03">S03 – Nullpunktkontrolle</option>
+    <option value="S04">S04 – Zielen</option>
+    <option value="S05">S05 – Abziehen</option>
+    <option value="S06">S06 – Nachhalten</option>
+    <option value="S07">S07 – Analyse & Wiederholung</option>
+    <option value="TL01">TL01 – Technikblöcke planen</option>
+    <option value="TL02">TL02 – Technik unter Belastung</option>
+    <option value="TL03">TL03 – Mentale Anker</option>
+    <option value="TL04">TL04 – Analyse mit Partner oder Video</option>
+    <option value="TL05">TL05 – Match Feeling</option>
+    <option value="TL06">TL06 – Reflexion & Umsetzung</option>
+  </select>
+  <button onclick="addCard()">➕ Karte hinzufügen</button>
+  <ul id="planList"></ul>
+  <button onclick="generatePDF()">📄 PDF Export</button>
+  <script src="app.js"></script>
 </body>
 </html>

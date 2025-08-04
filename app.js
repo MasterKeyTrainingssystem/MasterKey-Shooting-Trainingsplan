@@ -1,100 +1,71 @@
+// MasterKey Shooting Planner V7.3 – Interaktive Planung
+const cardDetails = {
+  S01: "S01 – Äußerer Anschlag: Grundlage für Körperhaltung und Position.",
+  S02: "S02 – Atmung: Rhythmus und Kontrolle im Zielvorgang.",
+  S03: "S03 – Nullpunktkontrolle: Statische Stabilität erkennen und nutzen.",
+  S04: "S04 – Zielen: Visuelle Kontrolle, Fokus auf Zielbild.",
+  S05: "S05 – Abziehen: Druckaufbau, Auslösen ohne Störung.",
+  S06: "S06 – Nachhalten: Bewegung beobachten, Treffer analysieren.",
+  S07: "S07 – Analyse & Wiederholung: Muster erkennen und verbessern.",
+  TL01: "TL01 – Technikblöcke planen: Strukturierte Trainingsgestaltung.",
+  TL02: "TL02 – Technik unter Belastung: Stresssituationen simulieren.",
+  TL03: "TL03 – Mentale Anker: Fokus & innere Stabilität aktivieren.",
+  TL04: "TL04 – Analyse mit Partner oder Video: Reflexion im Dialog.",
+  TL05: "TL05 – Match Feeling: Wettkampfnähe im Training erzeugen.",
+  TL06: "TL06 – Reflexion & Umsetzung: Erkenntnisse in Praxis bringen."
+};
 
-let lastWheelImageData = null;
-let lastEnvImageData = null;
+let selectedCards = [];
 
-function startApp() {
-    document.getElementById("login-screen").style.display = "none";
-    document.getElementById("main-app").style.display = "block";
-    fillCardOptions();
+function addCard() {
+  const select = document.getElementById("cardSelect");
+  const value = select.value;
+  if (value && !selectedCards.includes(value)) {
+    selectedCards.push(value);
+    updatePlanList();
+  }
 }
 
-function fillCardOptions() {
-    const tlCards = ["TL01 – Technikblöcke planen", "TL02 – Technik unter Belastung", "TL03 – Mentale Anker", "TL04 – Analyse mit Partner oder Video", "TL05 – Match Feeling", "TL06 – Reflexion & Umsetzung"];
-    const sCards = ["S01 – Äußerer Anschlag", "S02 – Atmung", "S03 – Nullpunktkontrolle", "S04 – Zielen", "S05 – Abziehen", "S06 – Nachhalten", "S07 – Analyse & Wiederholung"];
-
-    let planning = document.getElementById("planning-card");
-    let warmup = document.getElementById("warmup-card");
-    let tech = document.getElementById("tech-card");
-    let mental = document.getElementById("mental-card");
-    let dry = document.getElementById("dry-card");
-    let eval = document.getElementById("eval-card");
-
-    tlCards.forEach(c => {
-        let opt = document.createElement("option");
-        opt.value = c;
-        opt.text = c;
-        planning.add(opt);
-    });
-    [warmup, tech, mental, dry, eval].forEach(select => {
-        sCards.forEach(c => {
-            let opt = document.createElement("option");
-            opt.value = c;
-            opt.text = c;
-            select.add(opt.cloneNode(true));
-        });
-    });
+function updatePlanList() {
+  const ul = document.getElementById("planList");
+  ul.innerHTML = "";
+  selectedCards.forEach(card => {
+    const li = document.createElement("li");
+    li.innerText = cardDetails[card];
+    ul.appendChild(li);
+  });
 }
 
-function saveSession() {
-    alert("Einheit lokal gespeichert.");
-}
+function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
 
-function drawWheel() {
-    const canvas = document.getElementById("wheelCanvas");
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const categories = ['Stand', 'Gewehrposition', 'Körperspannung', 'Atmung', 'Zielvorgang', 'Abziehen', 'Nachhalten', 'Mentale Stabilität'];
-    drawRadar(canvas, ctx, categories, "rgba(54, 162, 235, 0.4)");
-    lastWheelImageData = canvas.toDataURL("image/png");
-}
+  const name = document.getElementById("athleteName").value;
+  const trainer = document.getElementById("trainerName").value;
+  const ort = document.getElementById("trainingLocation").value;
+  const datum = document.getElementById("trainingDate").value;
+  const start = document.getElementById("startTime").value;
+  const ende = document.getElementById("endTime").value;
 
-function drawEnvironmentWheel() {
-    const canvas = document.getElementById("envCanvas");
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const categories = ['Elternhaus', 'Trainerteam', 'Freunde', 'Schule/Beruf', 'Verein', 'Mentale Gesundheit', 'Motivation', 'Zeitstruktur'];
-    drawRadar(canvas, ctx, categories, "rgba(255, 206, 86, 0.4)");
-    lastEnvImageData = canvas.toDataURL("image/png");
-}
+  doc.setFontSize(14);
+  doc.text("📋 MasterKey Trainingsplan", 10, 10);
+  doc.setFontSize(10);
+  doc.text(`Athlet: ${name}`, 10, 20);
+  doc.text(`Trainer: ${trainer}`, 10, 30);
+  doc.text(`Ort: ${ort}`, 10, 40);
+  doc.text(`Datum: ${datum}`, 10, 50);
+  doc.text(`Zeit: ${start} – ${ende}`, 10, 60);
+  doc.text("Karten:", 10, 70);
 
-function drawRadar(canvas, ctx, categories, fillStyle) {
-    const values = categories.map(cat => parseInt(prompt(`Bewerte ${cat} (0–10):`, "5")) || 5);
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
-    const r = 100;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, 2 * Math.PI);
-    ctx.stroke();
-    for (let i = 0; i < categories.length; i++) {
-        const angle = (i / categories.length) * 2 * Math.PI;
-        const x = cx + r * Math.cos(angle);
-        const y = cy + r * Math.sin(angle);
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(x, y);
-        ctx.stroke();
+  let y = 80;
+  selectedCards.forEach(card => {
+    if (y > 280) {
+      doc.addPage();
+      y = 20;
     }
-    ctx.beginPath();
-    for (let i = 0; i < values.length; i++) {
-        const angle = (i / values.length) * 2 * Math.PI;
-        const x = cx + (values[i] / 10) * r * Math.cos(angle);
-        const y = cy + (values[i] / 10) * r * Math.sin(angle);
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-    }
-    ctx.closePath();
-    ctx.fillStyle = fillStyle;
-    ctx.fill();
-    ctx.stroke();
-    ctx.font = "10px sans-serif";
-    ctx.fillStyle = "black";
-    for (let i = 0; i < categories.length; i++) {
-        const angle = (i / categories.length) * 2 * Math.PI;
-        const x = cx + (r + 10) * Math.cos(angle);
-        const y = cy + (r + 10) * Math.sin(angle);
-        ctx.fillText(categories[i], x - 20, y);
-    }
-}
+    doc.text(cardDetails[card], 10, y);
+    y += 10;
+  });
 
-function exportPDF() {
-    alert("PDF Export erfolgt später – Funktion vorbereitet.");
+  doc.save("masterkey_trainingsplan.pdf");
 }

@@ -1,23 +1,5 @@
-
-body {
-    font-family: sans-serif;
-    margin: 20px;
-    background: #f9f9f9;
-    color: #333;
-}
-h1, h2 {
-    color: #006400;
-}
-input, select, textarea {
-    display: block;
-    margin: 5px 0 15px;
-    padding: 8px;
-    width: 300px;
-}
-textarea {
-    height: 80px;
-}
-button {
-    margin: 10px 10px 20px 0;
-    padding: 10px 20px;
-}
+body { font-family: sans-serif; padding: 2rem; background: #fafafa; }
+input, select { margin: 0.3rem; padding: 0.4rem; }
+h1 { color: #2e7d32; }
+#planList { margin-top: 1rem; padding: 0; list-style: none; }
+#planList li { background: white; padding: 0.5rem; margin: 0.3rem 0; border: 1px solid #ccc; border-radius: 4px; }
