@@ -9,29 +9,46 @@
 <body>
   <div id="app">
     <div id="login-view">
+      <img src="logo.png" alt="MasterKey Logo" class="logo">
       <h1>MasterKey Shooting Planner</h1>
       <input type="text" id="email" placeholder="E-Mail">
       <input type="password" id="password" placeholder="Passwort">
+      <select id="role">
+        <option value="Trainer">Trainer</option>
+        <option value="Athlet">Athlet</option>
+      </select>
       <button onclick="login()">Login</button>
     </div>
 
     <div id="planner-view" style="display: none;">
-      <h2>Willkommen, <span id="username"></span></h2>
+      <h2>Willkommen, <span id="username"></span> (<span id="userrole"></span>)</h2>
+      <div>
+        <label>Zielsetzung:</label>
+        <input type="text" id="goal" placeholder="Trainingsziel">
+      </div>
+      <div>
+        <label>Athlet (nur für Trainer):</label>
+        <input type="text" id="athlete-name" placeholder="Name des Athleten">
+      </div>
       <div class="week-view" id="week"></div>
       <button onclick="addTrainingSession()">Einheit hinzufügen</button>
       <div id="session-form" style="display: none;">
         <input type="date" id="session-date">
         <input type="time" id="session-time">
-        <select id="session-card">
-          <option value="S01">S01 – Äußerer Anschlag</option>
-          <option value="S05">S05 – Abziehen</option>
-          <option value="TL03">TL03 – Atmungszyklus</option>
-        </select>
+        <label>Aufwärmen</label>
+        <select id="warmup-card"></select>
+        <label>Technik</label>
+        <select id="tech-card"></select>
+        <label>Mental</label>
+        <select id="mental-card"></select>
+        <label>Analyse</label>
+        <select id="analysis-card"></select>
         <textarea id="session-note" placeholder="Notizen"></textarea>
         <button onclick="saveSession()">Speichern</button>
       </div>
     </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
