@@ -1,60 +1,64 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MasterKey Shooting Planner</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>MasterKey Shooting – Trainer</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="MasterKey Logo" class="logo">
-    <h1>MasterKey Shooting Planner</h1>
+    <h1>🎯 MasterKey Shooting – Trainer</h1>
+    <input id="trainerName" type="text" placeholder="Name eingeben">
+    <button onclick="startApp()">Login</button>
   </header>
 
-  <section id="login">
-    <label for="username">👤 Name:</label>
-    <input type="text" id="username" placeholder="Name eingeben">
-    <button onclick="startPlanner()">Los geht's</button>
-  </section>
+  <main id="mainContent" style="display:none;">
+    <section id="athletes">
+      <h2>👥 Athletenverwaltung</h2>
+      <input type="text" id="athleteName" placeholder="Name des Athleten">
+      <input type="text" id="discipline" placeholder="Disziplin">
+      <input type="text" id="level" placeholder="Level">
+      <input type="text" id="team" placeholder="Kader / Team">
+      <button onclick="addAthlete()">➕ Athlet speichern</button>
+      <ul id="athleteList"></ul>
+    </section>
 
-  <main id="planner" style="display:none;">
-    <h2>🗓️ Trainingsplanung</h2>
-    <label>Datum:</label><input type="date" id="session-date">
-    <label>Startzeit:</label><input type="time" id="session-time">
-    <label>Endzeit:</label><input type="time" id="session-endtime">
+    <section id="plan">
+      <h2>🗓️ Trainingsplanung</h2>
+      <input type="date" id="session-date">
+      <input type="time" id="session-start">
+      <input type="time" id="session-end">
+      <label>Planungsgrundlage</label>
+      <select id="plan-base">
+        <option>TL01</option><option>TL02</option><option>TL03</option>
+        <option>TL04</option><option>TL05</option><option>TL06</option>
+      </select>
+      <label>Aufwärmen</label>
+      <select id="warmup">
+        <option>S01</option><option>S02</option><option>S03</option>
+        <option>S04</option><option>S05</option><option>S06</option><option>S07</option>
+      </select>
+      <label>Technik</label><select id="technique"><option>S01</option><option>S02</option><option>S03</option><option>S04</option><option>S05</option><option>S06</option><option>S07</option></select>
+      <label>Mental</label><select id="mental"><option>S01</option><option>S02</option><option>S03</option><option>S04</option><option>S05</option><option>S06</option><option>S07</option></select>
+      <label>Trocken</label><select id="dry"><option>S01</option><option>S02</option><option>S03</option><option>S04</option><option>S05</option><option>S06</option><option>S07</option></select>
+      <label>Auswertung</label><select id="analysis"><option>S01</option><option>S02</option><option>S03</option><option>S04</option><option>S05</option><option>S06</option><option>S07</option></select>
+      <textarea id="notes" placeholder="📝 Notizen zur Einheit"></textarea>
+      <button onclick="generatePDF()">📄 PDF exportieren</button>
+    </section>
 
-    <label>Planungsgrundlage (TL-Karten):</label>
-    <select id="planning-card">
-      <option value="TL01">TL01 – Technikblöcke planen</option>
-      <option value="TL02">TL02 – Technik unter Belastung</option>
-      <option value="TL03">TL03 – Mentale Anker</option>
-      <option value="TL04">TL04 – Analyse mit Partner oder Video</option>
-      <option value="TL05">TL05 – Match Feeling</option>
-      <option value="TL06">TL06 – Reflexion & Umsetzung</option>
-    </select>
+    <section>
+      <h2>📊 Wheel of Life – Schießablauf</h2>
+      <canvas id="shootingWheel" width="300" height="300" style="border:1px solid #ccc"></canvas>
+      <button onclick="drawWheel()">🌀 Analyse starten</button>
+    </section>
 
-    <label>Technikkarten (S01–S07):</label>
-    <select id="tech-card">
-      <option value="S01">S01 – Äußerer Anschlag</option>
-      <option value="S02">S02 – Atmung</option>
-      <option value="S03">S03 – Nullpunktkontrolle</option>
-      <option value="S04">S04 – Zielen</option>
-      <option value="S05">S05 – Abziehen</option>
-      <option value="S06">S06 – Nachhalten</option>
-      <option value="S07">S07 – Analyse & Wiederholung</option>
-    </select>
-
-    <label>Notizen:</label>
-    <textarea id="session-note" placeholder="Gedanken zur Einheit"></textarea>
-
-    <button onclick="saveSession()">💾 Einheit speichern</button>
-    <button onclick="exportPDF()">📄 PDF Export</button>
-
-    <h2>📊 Wheel of Life: Schießablauf</h2>
-    <canvas id="wheelCanvas" width="300" height="300"></canvas><br>
-    <button onclick="drawWheel()">🌀 Analyse starten</button>
+    <section>
+      <h2>📊 Wheel of Life – Umfeldanalyse</h2>
+      <canvas id="envWheel" width="300" height="300" style="border:1px solid #ccc"></canvas>
+      <button onclick="drawEnvWheel()">🌀 Umfeld analysieren</button>
+    </section>
   </main>
 
   <script src="script.js"></script>

@@ -1,95 +1,116 @@
-let lastWheelImageData = null;
 
-function startPlanner() {
-  const name = document.getElementById("username").value.trim();
-  if (!name) return alert("Bitte Namen eingeben.");
-  document.getElementById("login").style.display = "none";
-  document.getElementById("planner").style.display = "block";
+function startApp() {
+  document.getElementById("mainContent").style.display = "block";
 }
 
-function saveSession() {
-  alert("Einheit gespeichert (lokal – Funktion folgt).");
+function addAthlete() {
+  const name = document.getElementById("athleteName").value;
+  const dis = document.getElementById("discipline").value;
+  const lvl = document.getElementById("level").value;
+  const team = document.getElementById("team").value;
+  const list = document.getElementById("athleteList");
+  const li = document.createElement("li");
+  li.innerText = `${name} (${dis}, ${lvl}, ${team})`;
+  list.appendChild(li);
 }
 
-function exportPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const date = document.getElementById("session-date").value;
-  const startTime = document.getElementById("session-time").value;
-  const endTime = document.getElementById("session-endtime").value;
-  const planning = document.getElementById("planning-card").value;
-  const tech = document.getElementById("tech-card").value;
-  const notes = document.getElementById("session-note").value;
-
-  doc.setFontSize(14);
-  doc.text("MasterKey Shooting – Trainingsplanung", 10, 10);
-  doc.setFontSize(10);
-  doc.text(`Datum: ${date}`, 10, 20);
-  doc.text(`Zeit: ${startTime} – ${endTime}`, 10, 30);
-  doc.text(`Planungsgrundlage: ${planning}`, 10, 40);
-  doc.text(`Technik: ${tech}`, 10, 50);
-  doc.text("Notizen:", 10, 60);
-  const noteLines = doc.splitTextToSize(notes, 180);
-  doc.text(noteLines, 10, 70);
-
-  if (lastWheelImageData) {
-    doc.addPage();
-    doc.text("📊 Wheel of Life: Schießablauf", 10, 10);
-    doc.addImage(lastWheelImageData, "PNG", 15, 20, 180, 180);
-  }
-
-  doc.save("trainingsplanung.pdf");
-}
+let shootingImage = null;
+let envImage = null;
 
 function drawWheel() {
-  const canvas = document.getElementById('wheelCanvas');
-  const ctx = canvas.getContext('2d');
+  const canvas = document.getElementById("shootingWheel");
+  const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  const categories = ['Stand','Gewehrposition','Körperspannung','Atmung','Zielvorgang','Abziehen','Nachhalten','Mentale Stabilität'];
-  const values = [];
-  for (let cat of categories) {
-    const val = prompt(`Bewerte ${cat} (0–10):`, "5");
-    values.push(Math.min(Math.max(parseInt(val) || 0, 0), 10));
-  }
-
-  const centerX = canvas.width / 2;
-  const centerY = canvas.height / 2;
-  const radius = 100;
-  ctx.beginPath();
-  ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-  ctx.stroke();
-
-  for (let i = 0; i < categories.length; i++) {
-    const angle = (i / categories.length) * 2 * Math.PI;
-    const x = centerX + radius * Math.cos(angle);
-    const y = centerY + radius * Math.sin(angle);
-    ctx.moveTo(centerX, centerY);
-    ctx.lineTo(x, y);
+  const cats = ['Stand','Gewehrposition','Körperspannung','Atmung','Zielvorgang','Abziehen','Nachhalten','Mentale Stabilität'];
+  const vals = cats.map(c => parseInt(prompt(c + " (0-10):", "5")));
+  const r = 100, cx = 150, cy = 150;
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.stroke();
+  for (let i = 0; i < 8; i++) {
+    const angle = i * 2 * Math.PI / 8;
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
     ctx.stroke();
   }
-
   ctx.beginPath();
-  for (let i = 0; i < values.length; i++) {
-    const angle = (i / values.length) * 2 * Math.PI;
-    const x = centerX + (values[i] / 10) * radius * Math.cos(angle);
-    const y = centerY + (values[i] / 10) * radius * Math.sin(angle);
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
+  for (let i = 0; i < 8; i++) {
+    const angle = i * 2 * Math.PI / 8;
+    const val = Math.min(Math.max(vals[i], 0), 10);
+    const x = cx + val / 10 * r * Math.cos(angle);
+    const y = cy + val / 10 * r * Math.sin(angle);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
   }
   ctx.closePath();
-  ctx.fillStyle = 'rgba(54, 162, 235, 0.4)';
-  ctx.fill();
-  ctx.stroke();
+  ctx.fillStyle = "rgba(100,200,100,0.3)";
+  ctx.fill(); ctx.stroke();
+  shootingImage = canvas.toDataURL("image/png");
+}
 
-  ctx.font = "10px sans-serif";
-  ctx.fillStyle = "black";
-  for (let i = 0; i < categories.length; i++) {
-    const angle = (i / categories.length) * 2 * Math.PI;
-    const x = centerX + (radius + 10) * Math.cos(angle);
-    const y = centerY + (radius + 10) * Math.sin(angle);
-    ctx.fillText(categories[i], x - 20, y);
+function drawEnvWheel() {
+  const canvas = document.getElementById("envWheel");
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const cats = ['Elternhaus','Trainer','Freunde','Schule/Beruf','Verein','Mentale Gesundheit','Motivation','Zeitstruktur'];
+  const vals = cats.map(c => parseInt(prompt(c + " (0-10):", "5")));
+  const r = 100, cx = 150, cy = 150;
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.stroke();
+  for (let i = 0; i < 8; i++) {
+    const angle = i * 2 * Math.PI / 8;
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+    ctx.stroke();
+  }
+  ctx.beginPath();
+  for (let i = 0; i < 8; i++) {
+    const angle = i * 2 * Math.PI / 8;
+    const val = Math.min(Math.max(vals[i], 0), 10);
+    const x = cx + val / 10 * r * Math.cos(angle);
+    const y = cy + val / 10 * r * Math.sin(angle);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = "rgba(200,150,100,0.3)";
+  ctx.fill(); ctx.stroke();
+  envImage = canvas.toDataURL("image/png");
+}
+
+async function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const date = document.getElementById("session-date").value;
+  const start = document.getElementById("session-start").value;
+  const end = document.getElementById("session-end").value;
+  const base = document.getElementById("plan-base").value;
+  const warmup = document.getElementById("warmup").value;
+  const tech = document.getElementById("technique").value;
+  const mental = document.getElementById("mental").value;
+  const dry = document.getElementById("dry").value;
+  const analysis = document.getElementById("analysis").value;
+  const notes = document.getElementById("notes").value;
+
+  doc.text("MasterKey Shooting – Trainingsplanung", 10, 10);
+  doc.text(`Datum: ${date}  Zeit: ${start} – ${end}`, 10, 20);
+  doc.text(`Planungsgrundlage: ${base}`, 10, 30);
+  doc.text(`Aufwärmen: ${warmup}`, 10, 40);
+  doc.text(`Technik: ${tech}`, 10, 50);
+  doc.text(`Mental: ${mental}`, 10, 60);
+  doc.text(`Trocken: ${dry}`, 10, 70);
+  doc.text(`Auswertung: ${analysis}`, 10, 80);
+  doc.text("Notizen:", 10, 90);
+  const lines = doc.splitTextToSize(notes, 180);
+  doc.text(lines, 10, 100);
+
+  if (shootingImage) {
+    doc.addPage();
+    doc.text("Wheel of Life – Schießablauf", 10, 10);
+    doc.addImage(shootingImage, "PNG", 15, 20, 180, 180);
   }
 
-  lastWheelImageData = canvas.toDataURL("image/png");
+  if (envImage) {
+    doc.addPage();
+    doc.text("Wheel of Life – Umfeldanalyse", 10, 10);
+    doc.addImage(envImage, "PNG", 15, 20, 180, 180);
+  }
+
+  doc.save("masterkey_training.pdf");
 }

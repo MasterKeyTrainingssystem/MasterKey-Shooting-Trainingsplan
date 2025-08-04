@@ -1,27 +1,9 @@
 
-body {
-  font-family: sans-serif;
-  padding: 20px;
-  background: #f9f9f9;
-}
-header {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-.logo {
-  width: 60px;
-}
+body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+header { background: #e0ffe0; padding: 10px; border-radius: 10px; }
 input, select, textarea, button {
-  margin-bottom: 10px;
-  display: block;
-  width: 100%;
-  max-width: 400px;
+  display: block; margin: 8px 0; padding: 8px; width: 100%;
 }
-textarea {
-  height: 80px;
-}
-canvas {
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-}
+button { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+h1, h2 { color: #2f4f2f; }
+section { margin-top: 20px; padding: 10px; background: #fff; border-radius: 8px; }
