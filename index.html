@@ -6,11 +6,34 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <label>📊 Wheel of Life: Technikanschlag</label><br>
-  <canvas id="wheelCanvas" width="300" height="300" style="border:1px solid #ccc"></canvas>
-  <br>
-  <button onclick="drawWheel()">🌀 Stärken & Schwächen analysieren</button>
-  <button onclick="exportPDF()">📄 PDF exportieren</button>
+  <h2>🗓️ Trainingsplanung</h2>
+  <input type="date" id="session-date">
+  <input type="time" id="session-time">
+  <input type="time" id="session-endtime" placeholder="Endzeit">
+  <label>Aufwärmen</label>
+  <select id="warmup-card">
+    <option value="S01">S01 – Äußerer Anschlag</option>
+    <option value="S02">S02 – Atmung</option>
+    <option value="S03">S03 – Nullpunktkontrolle</option>
+  </select>
+  <label>Technik</label>
+  <select id="tech-card">
+    <option value="TL01">TL01 – Technikblöcke planen</option>
+    <option value="TL02">TL02 – Technik unter Belastung</option>
+  </select>
+  <label>Mental</label>
+  <select id="mental-card">
+    <option value="TL03">TL03 – Mentale Anker</option>
+  </select>
+  <label>Analyse</label>
+  <select id="analysis-card">
+    <option value="TL04">TL04 – Analyse mit Partner oder Video</option>
+  </select>
+  <textarea id="session-note" placeholder="Notizen zur Einheit"></textarea>
+  <button onclick="saveSession()">➕ Einheit speichern</button>
+
+  <div id="week-overview"></div>
+
   <script src="script.js"></script>
 </body>
 </html>
