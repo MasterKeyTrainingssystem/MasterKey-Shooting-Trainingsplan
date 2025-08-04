@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MasterKey Shooting Planner</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <div id="login-view">
+      <h1>MasterKey Shooting Planner</h1>
+      <input type="text" id="email" placeholder="E-Mail">
+      <input type="password" id="password" placeholder="Passwort">
+      <button onclick="login()">Login</button>
+    </div>
+
+    <div id="planner-view" style="display: none;">
+      <h2>Willkommen, <span id="username"></span></h2>
+      <div class="week-view" id="week"></div>
+      <button onclick="addTrainingSession()">Einheit hinzufügen</button>
+      <div id="session-form" style="display: none;">
+        <input type="date" id="session-date">
+        <input type="time" id="session-time">
+        <select id="session-card">
+          <option value="S01">S01 – Äußerer Anschlag</option>
+          <option value="S05">S05 – Abziehen</option>
+          <option value="TL03">TL03 – Atmungszyklus</option>
+        </select>
+        <textarea id="session-note" placeholder="Notizen"></textarea>
+        <button onclick="saveSession()">Speichern</button>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
