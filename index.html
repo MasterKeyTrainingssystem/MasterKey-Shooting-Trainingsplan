@@ -3,104 +3,68 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>MasterKey Shooting – Trainingsplan V6.2</title>
-  <link rel="stylesheet" href="style.css">
+  <title>MasterKey Shooting Planner – V6.7</title>
+  <style>
+    canvas { border: 1px solid #ccc; margin: 20px auto; display: block; }
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+    h1, h2 { color: #2a5d38; text-align: center; }
+    section { margin-bottom: 40px; }
+    .card-slot { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
+    .card { padding: 10px 15px; background: #cde7d8; border-radius: 8px; cursor: grab; }
+    #plan-area { border: 2px dashed #888; min-height: 80px; padding: 10px; background: #fff; margin-top: 10px; }
+    textarea { width: 100%; min-height: 80px; }
+    button { margin-top: 10px; padding: 10px 20px; }
+  </style>
 </head>
 <body>
-<img src='masterkey_logo.png' alt='MasterKey Shooting' style='height:80px;margin-bottom:10px;'>
-  <img src="logo.png" alt="MasterKey Logo" style="height: 60px;">
-  <h1>🎯 Individuelle Trainingsplanung</h1>
+  <h1>MasterKey Shooting Planner – Version 6.7</h1>
 
-  <label for="athlete">Athlet:in wählen:</label>
-  <select id="athlete">
-    <option value="Anna">Anna – Gewehr</option>
-    <option value="Ben">Ben – Pistole</option>
-  </select>
+  <section>
+    <h2>📝 Trainingsplanung</h2>
+    <label>Datum: <input type="date" id="session-date"></label><br>
+    <label>Startzeit: <input type="time" id="session-time"></label>
+    <label>Endzeit: <input type="time" id="session-endtime"></label><br><br>
+    <label>Trainer: <input type="text" id="trainer-name"></label>
+    <label>Ort: <input type="text" id="training-location"></label><br><br>
+    <label>Notizen:</label><br>
+    <textarea id="notes"></textarea>
+  </section>
 
-  <h2>🗂️ Kartenübersicht</h2>
-  <div id="card-pool">
-    <h3>Basis-Karten #S01–#S07</h3>
-    <div class="card" draggable="true" data-id="S01">S01 – Äußerer Anschlag</div>
-    <div class="card" draggable="true" data-id="S02">S02 – Atmung</div>
-    <div class="card" draggable="true" data-id="S03">S03 – Nullpunktkontrolle</div>
-    <div class="card" draggable="true" data-id="S04">S04 – Zielen</div>
-    <div class="card" draggable="true" data-id="S05">S05 – Abziehen</div>
-    <div class="card" draggable="true" data-id="S06">S06 – Nachhalten</div>
-    <div class="card" draggable="true" data-id="S07">S07 – Analyse & Wiederholung</div>
+  <section>
+    <h2>🃏 Karten-Auswahl per Drag & Drop</h2>
+    <div class="card-slot" id="card-pool">
+      <div class="card" draggable="true">S01 – Äußerer Anschlag</div>
+      <div class="card" draggable="true">S02 – Atmung</div>
+      <div class="card" draggable="true">S03 – Nullpunktkontrolle</div>
+      <div class="card" draggable="true">S04 – Zielen</div>
+      <div class="card" draggable="true">S05 – Abziehen</div>
+      <div class="card" draggable="true">S06 – Nachhalten</div>
+      <div class="card" draggable="true">S07 – Analyse & Wiederholung</div>
+      <div class="card" draggable="true">TL01 – Technikblöcke planen</div>
+      <div class="card" draggable="true">TL02 – Technik unter Belastung</div>
+      <div class="card" draggable="true">TL03 – Mentale Anker</div>
+      <div class="card" draggable="true">TL04 – Analyse mit Partner</div>
+      <div class="card" draggable="true">TL05 – Match Feeling</div>
+      <div class="card" draggable="true">TL06 – Reflexion & Umsetzung</div>
+    </div>
+    <h3>🗂️ Dein Trainingsplan:</h3>
+    <div id="plan-area" ondrop="dropCard(event)" ondragover="allowDrop(event)"></div>
+  </section>
 
-    <h3>Planungsgrundlage #TL01–#TL06</h3>
-    <div class="card" draggable="true" data-id="TL01">TL01 – Technikblöcke planen</div>
-    <div class="card" draggable="true" data-id="TL02">TL02 – Technik unter Belastung</div>
-    <div class="card" draggable="true" data-id="TL03">TL03 – Mentale Anker</div>
-    <div class="card" draggable="true" data-id="TL04">TL04 – Analyse mit Partner oder Video</div>
-    <div class="card" draggable="true" data-id="TL05">TL05 – Match Feeling</div>
-    <div class="card" draggable="true" data-id="TL06">TL06 – Reflexion & Umsetzung</div>
+  <section>
+    <h2>📊 Wheel of Life: Schießablauf</h2>
+    <canvas id="shootCanvas" width="400" height="400"></canvas>
+  </section>
+
+  <section>
+    <h2>📊 Wheel of Life: Umfeldanalyse</h2>
+    <canvas id="envCanvas" width="400" height="400"></canvas>
+  </section>
+
+  <div style="text-align: center;">
+    <button onclick="downloadPDF()">📄 PDF Export</button>
   </div>
 
-  <h2>📋 Trainingsplan</h2>
-  <div id="plan-dropzone" ondragover="event.preventDefault()"></div>
-
-  <div id="card-info"></div>
-  <br>
-  <button onclick="savePlan()">💾 Plan speichern</button>
-  <button onclick="exportPDF()">📄 PDF exportieren</button>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="script.js"></script>
-
-  <h2>🕒 Trainingszeit</h2>
-  <label>Datum: <input type="date" id="session-date"></label>
-  <label>Startzeit: <input type="time" id="session-time"></label>
-  <label>Endzeit: <input type="time" id="session-endtime"></label>
-
-  <h2>🔍 Detaillierte Struktur</h2>
-  <label>Aufwärmen:</label><select id="warmup"><option>S01 – Äußerer Anschlag</option></select>
-  <label>Technik:</label><select id="tech"><option>S02 – Atmung</option></select>
-  <label>Mental:</label><select id="mental"><option>S03 – Nullpunktkontrolle</option></select>
-  <label>Trocken:</label><select id="dry"><option>S04 – Zielen</option></select>
-  <label>Auswertung:</label><select id="eval"><option>S07 – Analyse & Wiederholung</option></select>
-
-  <h2>📊 Wheel of Life – Schießablauf</h2>
-  <canvas id="wheelCanvas" width="300" height="300" style="border:1px solid #ccc"></canvas>
-  <br><button onclick="drawWheel()">🌀 Analyse starten</button>
-
-  <h2>📊 Wheel of Life – Umfeldanalyse</h2>
-  <canvas id="envCanvas" width="300" height="300" style="border:1px solid #ccc"></canvas>
-  <br><button onclick="drawEnvironmentWheel()">🌀 Umfeld analysieren</button>
-
-
-<h2>📅 Wochenübersicht</h2>
-<div id="calendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:20px;">
-  <div><strong>Montag</strong><div id="day-Mo" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
-  <div><strong>Dienstag</strong><div id="day-Di" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
-  <div><strong>Mittwoch</strong><div id="day-Mi" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
-  <div><strong>Donnerstag</strong><div id="day-Do" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
-  <div><strong>Freitag</strong><div id="day-Fr" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
-  <div><strong>Samstag</strong><div id="day-Sa" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
-  <div><strong>Sonntag</strong><div id="day-So" class="day-cell" style="min-height:100px;padding:5px;border:1px solid #ccc"></div></div>
-</div>
-
-
-<script>
-function saveToCalendar() {
-  const name = document.getElementById("athlete-name")?.value || "Athlet";
-  const date = new Date(document.getElementById("session-date").value);
-  const weekday = ['So','Mo','Di','Mi','Do','Fr','Sa'][date.getDay()];
-  const start = document.getElementById("session-time").value;
-  const end = document.getElementById("session-endtime").value;
-  const card = document.getElementById("planning-card").value;
-
-  const entry = document.createElement("div");
-  entry.style.borderBottom = "1px solid #999";
-  entry.style.paddingBottom = "4px";
-  entry.style.marginBottom = "4px";
-  entry.innerHTML = `<strong>${name}</strong><br>${start}–${end}<br>📌 ${card}`;
-
-  const container = document.getElementById("day-" + weekday);
-  if (container) container.appendChild(entry);
-}
-document.querySelector("button[onclick='saveSession()']").addEventListener("click", saveToCalendar);
-</script>
-
+  <script src="planner.js"></script>
 </body>
 </html>
