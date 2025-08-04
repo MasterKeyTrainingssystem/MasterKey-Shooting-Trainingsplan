@@ -1,81 +1,74 @@
-let user = null;
-let sessions = [];
+let lastWheelImageData = null;
 
-function cardOptions() {
-  return [
-    "S01 – Äußerer Anschlag",
-    "S02 – Atmung",
-    "S03 – Nullpunktkontrolle",
-    "S04 – Zielen",
-    "S05 – Abziehen",
-    "S06 – Nachhalten",
-    "S07 – Analyse & Wiederholung",
-    "TL01 – Technikblöcke planen",
-    "TL02 – Technik unter Belastung",
-    "TL03 – Mentale Anker",
-    "TL04 – Analyse mit Partner oder Video",
-    "TL05 – Match Feeling",
-    "TL06 – Reflexion & Umsetzung"
-  ].map(code => `<option value="${code.split(' – ')[0]}">${code}</option>`).join('');
+function drawWheel() {
+  const canvas = document.getElementById('wheelCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const categories = [
+    'Stand', 'Körperspannung', 'Gewehranlage', 'Kopfhaltung',
+    'Visierlinie', 'Zielbild', 'Abzugskontrolle', 'Nachhalten'
+  ];
+  const values = [];
+  for (let i = 0; i < categories.length; i++) {
+    const val = prompt(`Bewerte ${categories[i]} (0-10):`, "5");
+    values.push(Math.min(Math.max(parseInt(val) || 0, 0), 10));
+  }
+
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  const radius = 100;
+
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+  ctx.stroke();
+  for (let i = 0; i < categories.length; i++) {
+    const angle = (i / categories.length) * 2 * Math.PI;
+    const x = centerX + radius * Math.cos(angle);
+    const y = centerY + radius * Math.sin(angle);
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  }
+
+  ctx.beginPath();
+  for (let i = 0; i < values.length; i++) {
+    const angle = (i / values.length) * 2 * Math.PI;
+    const x = centerX + (values[i] / 10) * radius * Math.cos(angle);
+    const y = centerY + (values[i] / 10) * radius * Math.sin(angle);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(0, 123, 255, 0.4)';
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = "10px sans-serif";
+  ctx.fillStyle = "black";
+  for (let i = 0; i < categories.length; i++) {
+    const angle = (i / categories.length) * 2 * Math.PI;
+    const x = centerX + (radius + 10) * Math.cos(angle);
+    const y = centerY + (radius + 10) * Math.sin(angle);
+    ctx.fillText(categories[i], x - 20, y);
+  }
+
+  lastWheelImageData = canvas.toDataURL("image/png");
 }
 
-function login() {
-  const email = document.getElementById('email').value;
-  const role = document.getElementById('role').value;
-  if (!email) return alert("Bitte E-Mail eingeben");
-  user = { email, role };
-  document.getElementById('username').textContent = email;
-  document.getElementById('userrole').textContent = role;
-  document.getElementById('login-view').style.display = 'none';
-  document.getElementById('planner-view').style.display = 'block';
+function exportPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 10;
+  doc.setFontSize(12);
+  doc.text(`MasterKey Trainingsplan – Demo`, 10, y);
+  y += 10;
 
-  document.getElementById('warmup-card').innerHTML = cardOptions();
-  document.getElementById('tech-card').innerHTML = cardOptions();
-  document.getElementById('mental-card').innerHTML = cardOptions();
-  document.getElementById('analysis-card').innerHTML = cardOptions();
+  if (lastWheelImageData) {
+    doc.addPage();
+    doc.text("📊 Wheel of Life: Technikanschlag", 10, 10);
+    doc.addImage(lastWheelImageData, "PNG", 15, 20, 180, 180);
+  }
 
-  renderWeek();
-}
-
-function renderWeek() {
-  const weekEl = document.getElementById('week');
-  weekEl.innerHTML = '';
-  const days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
-  days.forEach(day => {
-    const div = document.createElement('div');
-    div.textContent = day;
-    const daySessions = sessions.filter(s => new Date(s.date).getDay() === (days.indexOf(day)+1)%7);
-    daySessions.forEach(s => {
-      const sDiv = document.createElement('div');
-      sDiv.className = 'session';
-      sDiv.innerHTML = `<b>${s.date} – ${s.time}</b><br>
-        Aufwärmen: ${s.structure.warmup}<br>
-        Technik: ${s.structure.tech}<br>
-        Mental: ${s.structure.mental}<br>
-        Analyse: ${s.structure.analysis}<br>
-        <i>${s.note}</i>`;
-      div.appendChild(sDiv);
-    });
-    weekEl.appendChild(div);
-  });
-}
-
-function addTrainingSession() {
-  document.getElementById('session-form').style.display = 'block';
-}
-
-function saveSession() {
-  const date = document.getElementById('session-date').value;
-  const time = document.getElementById('session-time').value;
-  const structure = {
-    warmup: document.getElementById('warmup-card').value,
-    tech: document.getElementById('tech-card').value,
-    mental: document.getElementById('mental-card').value,
-    analysis: document.getElementById('analysis-card').value
-  };
-  const note = document.getElementById('session-note').value;
-  sessions.push({ date, time, structure, note });
-  renderWeek();
-  document.getElementById('session-form').reset();
-  document.getElementById('session-form').style.display = 'none';
+  doc.save(`Trainingsplan_Demo.pdf`);
 }
