@@ -1,39 +1,37 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>MasterKey Shooting Planner 7.3</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MasterKey Shooting Trainer Tool</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>📋 MasterKey Shooting Planner – Version 7.3</h1>
-  <input type="text" id="athleteName" placeholder="Name der Athlet:in">
-  <input type="text" id="trainerName" placeholder="Name des Trainers">
-  <input type="text" id="trainingLocation" placeholder="Trainingsort">
-  <input type="date" id="trainingDate">
-  <input type="time" id="startTime">
-  <input type="time" id="endTime">
-  <h2>🎯 Karten auswählen</h2>
-  <select id="cardSelect">
-    <option value="">Bitte Karte wählen</option>
-    <option value="S01">S01 – Äußerer Anschlag</option>
-    <option value="S02">S02 – Atmung</option>
-    <option value="S03">S03 – Nullpunktkontrolle</option>
-    <option value="S04">S04 – Zielen</option>
-    <option value="S05">S05 – Abziehen</option>
-    <option value="S06">S06 – Nachhalten</option>
-    <option value="S07">S07 – Analyse & Wiederholung</option>
-    <option value="TL01">TL01 – Technikblöcke planen</option>
-    <option value="TL02">TL02 – Technik unter Belastung</option>
-    <option value="TL03">TL03 – Mentale Anker</option>
-    <option value="TL04">TL04 – Analyse mit Partner oder Video</option>
-    <option value="TL05">TL05 – Match Feeling</option>
-    <option value="TL06">TL06 – Reflexion & Umsetzung</option>
-  </select>
-  <button onclick="addCard()">➕ Karte hinzufügen</button>
-  <ul id="planList"></ul>
-  <button onclick="generatePDF()">📄 PDF Export</button>
-  <script src="app.js"></script>
+  <h1>MasterKey Shooting – Trainingsplan</h1>
+  <div id="login">
+    <label for="trainerName">Trainername:</label>
+    <input type="text" id="trainerName" placeholder="Name eingeben">
+    <label for="athleteName">Athletenname:</label>
+    <input type="text" id="athleteName" placeholder="Athlet eingeben">
+    <button onclick="startPlanning()">Start</button>
+  </div>
+
+  <div id="planner" style="display:none;">
+    <div id="cards-container">
+      <h2>Verfügbare Karten</h2>
+      <div id="cardList"></div>
+    </div>
+    <div id="phases-container">
+      <h2>Trainingsphasen</h2>
+      <div class="phase" data-phase="Warm-Up">Warm-Up</div>
+      <div class="phase" data-phase="Anfangsphase">Anfangsphase</div>
+      <div class="phase" data-phase="Hauptphase">Hauptphase</div>
+      <div class="phase" data-phase="Schlussphase">Schlussphase</div>
+      <div class="phase" data-phase="Feedback">Feedback</div>
+    </div>
+    <button onclick="generatePDF()">📄 PDF Export</button>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

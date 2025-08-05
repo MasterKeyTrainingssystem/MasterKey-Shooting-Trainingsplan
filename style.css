@@ -1,15 +1,23 @@
-
-body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
-h1, h2 { color: #333; }
+body {
+  font-family: sans-serif;
+  margin: 20px;
+}
+h1, h2 {
+  color: #2e7d32;
+}
+input {
+  margin: 5px;
+}
+.phase {
+  border: 1px solid #ccc;
+  padding: 10px;
+  min-height: 80px;
+  margin: 10px 0;
+}
 .card {
-  display: inline-block; padding: 10px 15px; margin: 5px;
-  background: #e0f7fa; border: 1px solid #999; border-radius: 5px;
+  padding: 5px;
+  margin: 3px;
+  background: #dcedc8;
   cursor: grab;
-}
-#plan-dropzone {
-  min-height: 100px; border: 2px dashed #666; padding: 10px; margin-top: 10px;
-  background: #fff3e0;
-}
-#card-info {
-  margin-top: 20px; padding: 10px; background: #e8f5e9; border-left: 4px solid #4CAF50;
+  border-radius: 4px;
 }
